@@ -8,25 +8,25 @@
              d:DesignHeight="600" d:DesignWidth="800"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              Background="{DynamicResource MaterialDesignPaper}"
-             FontFamily="{DynamicResource MaterialDesignDefaultFont}">
+             FontFamily="{DynamicResource MaterialDesignDefaultFont}"
+             Loaded="UserControl_Loaded">
+    <!-- Evento que se dispara al abrir la pantalla -->
 
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <!-- Título y Botón -->
             <RowDefinition Height="*"/>
-            <!-- Tarjetas -->
         </Grid.RowDefinitions>
 
         <!-- Cabecera -->
         <Grid Grid.Row="0" Margin="0 0 0 20">
             <TextBlock Text="Resumen General" FontSize="28" FontWeight="Bold" VerticalAlignment="Center"/>
-            <Button Command="{Binding CargarMetricasCommand}" 
+            <!-- Botón con evento Click -->
+            <Button x:Name="BtnActualizar" 
+                    Click="BtnActualizar_Click"
                     Style="{StaticResource MaterialDesignOutlinedButton}" 
                     HorizontalAlignment="Right" 
-                    Content="Actualizar Datos" 
-                    materialDesign:ButtonProgressAssist.IsIndicatorVisible="{Binding IsLoading}"
-                    materialDesign:ButtonProgressAssist.IsIndeterminate="True" />
+                    Content="Actualizar Datos" />
         </Grid>
 
         <!-- Contenedor de Tarjetas -->
@@ -34,55 +34,53 @@
             <WrapPanel Orientation="Horizontal" ItemWidth="230" ItemHeight="130">
 
                 <!-- SECCIÓN INGRESOS -->
-
                 <materialDesign:Card Margin="10" UniformCornerRadius="8" materialDesign:ElevationAssist.Elevation="Dp2">
                     <StackPanel Margin="15">
                         <TextBlock Text="Ingresos Hoy" FontSize="14" Foreground="Gray"/>
-                        <TextBlock Text="{Binding PagosHoy, StringFormat='C$ {0:N2}'}" FontSize="24" FontWeight="Bold" Margin="0 10 0 0" Foreground="#4CAF50"/>
+                        <TextBlock x:Name="TxtPagosHoy" Text="C$ 0.00" FontSize="24" FontWeight="Bold" Margin="0 10 0 0" Foreground="#4CAF50"/>
                     </StackPanel>
                 </materialDesign:Card>
 
                 <materialDesign:Card Margin="10" UniformCornerRadius="8" materialDesign:ElevationAssist.Elevation="Dp2">
                     <StackPanel Margin="15">
                         <TextBlock Text="Ingresos Semana" FontSize="14" Foreground="Gray"/>
-                        <TextBlock Text="{Binding PagosSemana, StringFormat='C$ {0:N2}'}" FontSize="24" FontWeight="Bold" Margin="0 10 0 0" Foreground="#4CAF50"/>
+                        <TextBlock x:Name="TxtPagosSemana" Text="C$ 0.00" FontSize="24" FontWeight="Bold" Margin="0 10 0 0" Foreground="#4CAF50"/>
                     </StackPanel>
                 </materialDesign:Card>
 
                 <materialDesign:Card Margin="10" UniformCornerRadius="8" materialDesign:ElevationAssist.Elevation="Dp2">
                     <StackPanel Margin="15">
                         <TextBlock Text="Ingresos Mes" FontSize="14" Foreground="Gray"/>
-                        <TextBlock Text="{Binding PagosMes, StringFormat='C$ {0:N2}'}" FontSize="24" FontWeight="Bold" Margin="0 10 0 0" Foreground="#4CAF50"/>
+                        <TextBlock x:Name="TxtPagosMes" Text="C$ 0.00" FontSize="24" FontWeight="Bold" Margin="0 10 0 0" Foreground="#4CAF50"/>
                     </StackPanel>
                 </materialDesign:Card>
 
                 <materialDesign:Card Margin="10" UniformCornerRadius="8" materialDesign:ElevationAssist.Elevation="Dp2">
                     <StackPanel Margin="15">
                         <TextBlock Text="Ingresos Históricos" FontSize="14" Foreground="Gray"/>
-                        <TextBlock Text="{Binding PagosTotales, StringFormat='C$ {0:N2}'}" FontSize="24" FontWeight="Bold" Margin="0 10 0 0"/>
+                        <TextBlock x:Name="TxtPagosTotales" Text="C$ 0.00" FontSize="24" FontWeight="Bold" Margin="0 10 0 0"/>
                     </StackPanel>
                 </materialDesign:Card>
 
                 <!-- SECCIÓN ASISTENCIAS -->
-
                 <materialDesign:Card Margin="10" UniformCornerRadius="8" materialDesign:ElevationAssist.Elevation="Dp2">
                     <StackPanel Margin="15">
                         <TextBlock Text="Visitas Hoy" FontSize="14" Foreground="Gray"/>
-                        <TextBlock Text="{Binding VisitasHoy}" FontSize="24" FontWeight="Bold" Margin="0 10 0 0" Foreground="#2196F3"/>
+                        <TextBlock x:Name="TxtVisitasHoy" Text="0" FontSize="24" FontWeight="Bold" Margin="0 10 0 0" Foreground="#2196F3"/>
                     </StackPanel>
                 </materialDesign:Card>
 
                 <materialDesign:Card Margin="10" UniformCornerRadius="8" materialDesign:ElevationAssist.Elevation="Dp2">
                     <StackPanel Margin="15">
                         <TextBlock Text="Visitas Semana" FontSize="14" Foreground="Gray"/>
-                        <TextBlock Text="{Binding VisitasSemana}" FontSize="24" FontWeight="Bold" Margin="0 10 0 0" Foreground="#2196F3"/>
+                        <TextBlock x:Name="TxtVisitasSemana" Text="0" FontSize="24" FontWeight="Bold" Margin="0 10 0 0" Foreground="#2196F3"/>
                     </StackPanel>
                 </materialDesign:Card>
 
                 <materialDesign:Card Margin="10" UniformCornerRadius="8" materialDesign:ElevationAssist.Elevation="Dp2">
                     <StackPanel Margin="15">
                         <TextBlock Text="Visitas Mes" FontSize="14" Foreground="Gray"/>
-                        <TextBlock Text="{Binding VisitasMes}" FontSize="24" FontWeight="Bold" Margin="0 10 0 0" Foreground="#2196F3"/>
+                        <TextBlock x:Name="TxtVisitasMes" Text="0" FontSize="24" FontWeight="Bold" Margin="0 10 0 0" Foreground="#2196F3"/>
                     </StackPanel>
                 </materialDesign:Card>
 
