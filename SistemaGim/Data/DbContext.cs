@@ -14,7 +14,6 @@ namespace SistemaGim.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
-                // Reemplaza "TU_SERVIDOR" con el nombre o IP de tu SQL Server local o remoto
                 optionsBuilder.UseSqlServer("Server=.;Database=SistemaGim;Trusted_Connection=True;TrustServerCertificate=True;");
             }
         }

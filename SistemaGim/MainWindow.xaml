@@ -21,11 +21,14 @@
         </Grid.ColumnDefinitions>
 
         <!-- Sidebar -->
+        <!-- Sidebar -->
         <Border Grid.Column="0" Background="{DynamicResource MaterialDesignDarkBackground}">
             <StackPanel Margin="0 20">
                 <TextBlock Text="GYM MANAGER" Foreground="White" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0 0 0 30"/>
 
-                <Button Style="{StaticResource MaterialDesignFlatLightBgButton}" Content="Dashboard" Margin="10 5" HorizontalAlignment="Stretch" />
+                <!-- Agregamos el evento Click aquí -->
+                <Button Click="BtnDashboard_Click" Style="{StaticResource MaterialDesignFlatLightBgButton}" Content="Dashboard" Margin="10 5" HorizontalAlignment="Stretch" />
+
                 <Button Style="{StaticResource MaterialDesignFlatLightBgButton}" Content="Visitas Diarias" Margin="10 5" HorizontalAlignment="Stretch"/>
                 <Button Style="{StaticResource MaterialDesignFlatLightBgButton}" Content="Miembros y Membresías" Margin="10 5" HorizontalAlignment="Stretch"/>
                 <Button Style="{StaticResource MaterialDesignFlatLightBgButton}" Content="Reportes" Margin="10 5" HorizontalAlignment="Stretch"/>
