@@ -1,0 +1,170 @@
+﻿<UserControl x:Class="SistemaGim.Views.ClientesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" 
+             d:DesignHeight="700" d:DesignWidth="1000"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             Background="Transparent"
+             FontFamily="{DynamicResource MaterialDesignDefaultFont}"
+             Loaded="UserControl_Loaded">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- Panel Superior: Controles y Formulario -->
+            <RowDefinition Height="*"/>
+            <!-- Panel Inferior: Tabla DataGrid -->
+        </Grid.RowDefinitions>
+
+        <!-- PANEL SUPERIOR: FORMULARIO Y BOTONES -->
+        <materialDesign:Card Grid.Row="0" Margin="0 0 0 20" UniformCornerRadius="8" materialDesign:ElevationAssist.Elevation="Dp2" Background="White">
+            <StackPanel Margin="20">
+
+                <!-- Encabezado y Buscador -->
+                <Grid Margin="0 0 0 20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="350"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0" Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="AccountGroup" Width="32" Height="32" Foreground="#673AB7" VerticalAlignment="Center"/>
+                        <TextBlock Text="Directorio de Clientes" FontSize="22" FontWeight="Bold" Margin="10 0 0 0" VerticalAlignment="Center"/>
+                    </StackPanel>
+
+                    <!-- Buscador -->
+                    <materialDesign:ColorZone Grid.Column="2" Mode="Standard" CornerRadius="5" Padding="10 5" 
+                                              materialDesign:ElevationAssist.Elevation="Dp1" Background="#F5F6FA">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <materialDesign:PackIcon Kind="Magnify" Opacity=".56" VerticalAlignment="Center" Margin="5 0" />
+                            <TextBox x:Name="TxtBuscar" Grid.Column="1" Margin="5 0 0 0" 
+                                     materialDesign:HintAssist.Hint="Buscar cliente por nombre..." 
+                                     materialDesign:TextFieldAssist.DecorationVisibility="Hidden" 
+                                     BorderThickness="0" MinWidth="200" VerticalAlignment="Center"
+                                     TextChanged="TxtBuscar_TextChanged"/>
+                        </Grid>
+                    </materialDesign:ColorZone>
+                </Grid>
+
+                <!-- Separador -->
+                <Separator Background="#E0E0E0" Margin="0 0 0 20"/>
+
+                <!-- Campos de Formulario (Horizontales) -->
+                <Grid Margin="0 0 0 20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox x:Name="TxtNombreCompleto" Grid.Column="0"
+                             materialDesign:HintAssist.Hint="Nombre Completo *" 
+                             Style="{StaticResource MaterialDesignFloatingHintTextBox}" 
+                             FontSize="15"/>
+
+                    <TextBox x:Name="TxtTelefono" Grid.Column="2"
+                             materialDesign:HintAssist.Hint="Teléfono (Opcional)" 
+                             Style="{StaticResource MaterialDesignFloatingHintTextBox}" 
+                             FontSize="15"/>
+
+                    <CheckBox x:Name="ChkEstado" Grid.Column="4"
+                              Content="Cliente Activo" 
+                              IsChecked="True" 
+                              VerticalAlignment="Bottom"
+                              FontSize="15" Margin="0 0 0 5"/>
+                </Grid>
+
+                <!-- Barra de Botones de Acción (Modernos) -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <TextBlock x:Name="TxtEstadoFormulario" Text="Creando nuevo registro" Foreground="Gray" FontStyle="Italic" VerticalAlignment="Center" Margin="0 0 20 0"/>
+
+                    <Button x:Name="BtnNuevo" Click="BtnLimpiar_Click" Style="{StaticResource MaterialDesignFlatButton}" Foreground="#2196F3" Height="40" Margin="5 0">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="AccountPlus" Width="20" Height="20" VerticalAlignment="Center"/>
+                            <TextBlock Text="NUEVO CLIENTE" Margin="8 0 0 0" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button x:Name="BtnGuardar" Click="BtnGuardar_Click" Background="#4CAF50" BorderBrush="#4CAF50" Foreground="White" Height="40" Margin="5 0">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="ContentSaveEdit" Width="20" Height="20" VerticalAlignment="Center"/>
+                            <TextBlock Text="GUARDAR / EDITAR" Margin="8 0 0 0" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button x:Name="BtnDarBaja" Click="BtnDarBaja_Click" Background="#FF9800" BorderBrush="#FF9800" Foreground="White" Height="40" Margin="5 0" IsEnabled="False">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="AccountCancel" Width="20" Height="20" VerticalAlignment="Center"/>
+                            <TextBlock Text="DAR DE BAJA" Margin="8 0 0 0" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button x:Name="BtnEliminar" Click="BtnEliminar_Click" Style="{StaticResource MaterialDesignOutlinedButton}" BorderBrush="#F44336" Foreground="#F44336" Height="40" Margin="15 0 0 0" IsEnabled="False">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="TrashCan" Width="20" Height="20" VerticalAlignment="Center"/>
+                            <TextBlock Text="ELIMINAR" Margin="8 0 0 0" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+
+            </StackPanel>
+        </materialDesign:Card>
+
+        <!-- PANEL INFERIOR: DATAGRID MODERNA -->
+        <materialDesign:Card Grid.Row="1" UniformCornerRadius="8" materialDesign:ElevationAssist.Elevation="Dp2" Background="White">
+            <DataGrid x:Name="DgClientes" 
+                      Margin="10"
+                      AutoGenerateColumns="False" 
+                      IsReadOnly="True" 
+                      CanUserAddRows="False" 
+                      SelectionMode="Single"
+                      SelectionChanged="DgClientes_SelectionChanged"
+                      HeadersVisibility="Column"
+                      GridLinesVisibility="Horizontal"
+                      HorizontalGridLinesBrush="#E0E0E0"
+                      BorderThickness="0"
+                      RowHeight="45"
+                      Background="White">
+                <DataGrid.Resources>
+                    <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
+                        <Setter Property="FontWeight" Value="Bold"/>
+                        <Setter Property="FontSize" Value="14"/>
+                        <Setter Property="Padding" Value="15 10"/>
+                    </Style>
+                    <Style TargetType="DataGridCell" BasedOn="{StaticResource MaterialDesignDataGridCell}">
+                        <Setter Property="Padding" Value="15 0"/>
+                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                    </Style>
+                </DataGrid.Resources>
+
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID" Binding="{Binding ClienteId}" Width="80"/>
+                    <DataGridTextColumn Header="Nombre Completo" Binding="{Binding NombreCompleto}" Width="*"/>
+                    <DataGridTextColumn Header="Teléfono" Binding="{Binding Telefono}" Width="150"/>
+
+                    <!-- Columna de Estado con estilo visual -->
+                    <DataGridCheckBoxColumn Header="Activo" Binding="{Binding Estado}" Width="100">
+                        <DataGridCheckBoxColumn.ElementStyle>
+                            <Style TargetType="CheckBox" BasedOn="{StaticResource MaterialDesignCheckBox}">
+                                <Setter Property="IsHitTestVisible" Value="False"/>
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridCheckBoxColumn.ElementStyle>
+                    </DataGridCheckBoxColumn>
+
+                    <DataGridTextColumn Header="Fecha de Registro" Binding="{Binding FechaRegistro, StringFormat='dd/MMM/yyyy'}" Width="150"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </materialDesign:Card>
+    </Grid>
+</UserControl>
