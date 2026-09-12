@@ -1,0 +1,144 @@
+﻿<UserControl x:Class="SistemaGim.Views.InventarioView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             Background="Transparent"
+             FontFamily="{DynamicResource MaterialDesignDefaultFont}"
+             Loaded="UserControl_Loaded">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- Formulario -->
+            <RowDefinition Height="*"/>
+            <!-- DataGrid -->
+        </Grid.RowDefinitions>
+
+        <!-- PANEL SUPERIOR: FORMULARIO -->
+        <materialDesign:Card Grid.Row="0" Margin="0 0 0 20" UniformCornerRadius="8" materialDesign:ElevationAssist.Elevation="Dp2" Background="White">
+            <StackPanel Margin="20">
+
+                <!-- Cabecera y Buscador -->
+                <Grid Margin="0 0 0 20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="350"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0" Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="WeightLifter" Width="32" Height="32" Foreground="#673AB7" VerticalAlignment="Center"/>
+                        <TextBlock Text="Inventario de Máquinas y Pesas" FontSize="22" FontWeight="Bold" Margin="10 0 0 0" VerticalAlignment="Center"/>
+                    </StackPanel>
+
+                    <materialDesign:ColorZone Grid.Column="2" Mode="Standard" CornerRadius="5" Padding="10 5" Background="#F5F6FA">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <materialDesign:PackIcon Kind="Magnify" Opacity=".56" VerticalAlignment="Center" Margin="5 0" />
+                            <TextBox x:Name="TxtBuscar" Grid.Column="1" Margin="5 0 0 0" 
+                                     materialDesign:HintAssist.Hint="Buscar equipo..." 
+                                     materialDesign:TextFieldAssist.DecorationVisibility="Hidden" 
+                                     BorderThickness="0" VerticalAlignment="Center"
+                                     TextChanged="TxtBuscar_TextChanged"/>
+                        </Grid>
+                    </materialDesign:ColorZone>
+                </Grid>
+
+                <Separator Background="#E0E0E0" Margin="0 0 0 20"/>
+
+                <!-- Campos de Formulario -->
+                <Grid Margin="0 0 0 20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="15"/>
+                        <ColumnDefinition Width="180"/>
+                        <ColumnDefinition Width="15"/>
+                        <ColumnDefinition Width="150"/>
+                        <ColumnDefinition Width="15"/>
+                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="15"/>
+                        <ColumnDefinition Width="150"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox x:Name="TxtNombre" Grid.Column="0"
+                             materialDesign:HintAssist.Hint="Nombre (Ej: Prensa, Mancuerna) *" 
+                             Style="{StaticResource MaterialDesignFloatingHintTextBox}" FontSize="15"/>
+
+                    <ComboBox x:Name="CmbTipo" Grid.Column="2"
+                              materialDesign:HintAssist.Hint="Tipo *"
+                              Style="{StaticResource MaterialDesignFloatingHintComboBox}" FontSize="15">
+                        <ComboBoxItem Content="Máquina"/>
+                        <ComboBoxItem Content="Peso Libre"/>
+                        <ComboBoxItem Content="Accesorio"/>
+                    </ComboBox>
+
+                    <TextBox x:Name="TxtPeso" Grid.Column="4"
+                             materialDesign:HintAssist.Hint="Peso (Ej: 5 lbs)" 
+                             Style="{StaticResource MaterialDesignFloatingHintTextBox}" FontSize="15"/>
+
+                    <TextBox x:Name="TxtCosto" Grid.Column="6"
+                             materialDesign:HintAssist.Hint="Costo (C$) *" 
+                             PreviewTextInput="ValidarSoloDecimales"
+                             Style="{StaticResource MaterialDesignFloatingHintTextBox}" FontSize="15"/>
+
+                    <TextBox x:Name="TxtCantidad" Grid.Column="8"
+                             materialDesign:HintAssist.Hint="Cantidad *" 
+                             PreviewTextInput="ValidarSoloNumeros"
+                             Style="{StaticResource MaterialDesignFloatingHintTextBox}" FontSize="15"/>
+                </Grid>
+
+                <!-- Estado y Botones -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <ComboBox x:Name="CmbEstado" Grid.Column="0" Width="180"
+                              materialDesign:HintAssist.Hint="Estado"
+                              Style="{StaticResource MaterialDesignFloatingHintComboBox}" FontSize="15">
+                        <ComboBoxItem Content="Activo"/>
+                        <ComboBoxItem Content="En Mantenimiento"/>
+                        <ComboBoxItem Content="Dado de baja"/>
+                    </ComboBox>
+
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                        <TextBlock x:Name="TxtEstadoFormulario" Text="Nuevo registro" Foreground="Gray" FontStyle="Italic" VerticalAlignment="Center" Margin="0 0 20 0"/>
+
+                        <Button Click="BtnLimpiar_Click" Style="{StaticResource MaterialDesignFlatButton}" Foreground="#2196F3" Height="40" Margin="5 0" Content="NUEVO"/>
+                        <Button Click="BtnGuardar_Click" Background="#4CAF50" BorderBrush="#4CAF50" Foreground="White" Height="40" Margin="5 0" Content="GUARDAR / EDITAR"/>
+                        <Button x:Name="BtnEliminar" Click="BtnEliminar_Click" Style="{StaticResource MaterialDesignOutlinedButton}" BorderBrush="#F44336" Foreground="#F44336" Height="40" Margin="15 0 0 0" Content="ELIMINAR" IsEnabled="False"/>
+                    </StackPanel>
+                </Grid>
+
+            </StackPanel>
+        </materialDesign:Card>
+
+        <!-- PANEL INFERIOR: TABLA -->
+        <materialDesign:Card Grid.Row="1" UniformCornerRadius="8" materialDesign:ElevationAssist.Elevation="Dp2" Background="White">
+            <DataGrid x:Name="DgInventario" Margin="10" AutoGenerateColumns="False" IsReadOnly="True" 
+                      SelectionMode="Single" SelectionChanged="DgInventario_SelectionChanged"
+                      Background="White" HeadersVisibility="Column" GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#E0E0E0" BorderThickness="0" RowHeight="45">
+                <DataGrid.Resources>
+                    <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
+                        <Setter Property="FontWeight" Value="Bold"/>
+                        <Setter Property="FontSize" Value="14"/>
+                    </Style>
+                </DataGrid.Resources>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID" Binding="{Binding MaquinaId}" Width="60"/>
+                    <DataGridTextColumn Header="Nombre del Equipo" Binding="{Binding Nombre}" Width="*"/>
+                    <DataGridTextColumn Header="Tipo" Binding="{Binding Tipo}" Width="130"/>
+                    <DataGridTextColumn Header="Peso" Binding="{Binding PesoEspecifico}" Width="100"/>
+                    <DataGridTextColumn Header="Costo (C$)" Binding="{Binding Costo, StringFormat='C$ {0:N2}'}" Width="130"/>
+                    <DataGridTextColumn Header="Cant." Binding="{Binding Cantidad}" Width="70"/>
+                    <DataGridTextColumn Header="Estado" Binding="{Binding Estado}" Width="140"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </materialDesign:Card>
+    </Grid>
+</UserControl>

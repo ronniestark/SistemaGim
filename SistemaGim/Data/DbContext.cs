@@ -9,6 +9,7 @@ namespace SistemaGim.Data
         public DbSet<Cliente> Clientes { get; set; }
         public DbSet<Pago> Pagos { get; set; }
         public DbSet<Asistencia> Asistencias { get; set; }
+        public DbSet<InventarioMaquina> InventarioMaquinas { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

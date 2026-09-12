@@ -70,7 +70,7 @@
                             </Button>
 
                             <!-- Botón Inventario Máquinas -->
-                            <Button  Style="{StaticResource MaterialDesignFlatButton}" Foreground="#FFFFFF" HorizontalAlignment="Stretch" Height="50" HorizontalContentAlignment="Left" Margin="0 0 0 5">
+                            <Button Click="BtnInventario_Click" Style="{StaticResource MaterialDesignFlatButton}" Foreground="#FFFFFF" HorizontalAlignment="Stretch" Height="50" HorizontalContentAlignment="Left" Margin="0 0 0 5">
                                 <StackPanel Orientation="Horizontal">
                                     <materialDesign:PackIcon Kind="Weight" Width="22" Height="22" VerticalAlignment="Center" Margin="10 0 0 0"/>
                                     <TextBlock Text="Inventario Máquinas" Margin="20 0 0 0" VerticalAlignment="Center" FontSize="15"/>

@@ -1,89 +1,119 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using LiveCharts;
+using LiveCharts.Wpf;
 using Microsoft.EntityFrameworkCore;
-using SistemaGim.Data; // Importar tu DbContext
+using SistemaGim.Data;
 
 namespace SistemaGim.Views
 {
     public partial class DashboardView : UserControl
     {
+        // Formateador para el eje Y del gráfico de barras
+        public Func<double, string> FormatoMoneda { get; set; } = value => $"C$ {value:N0}";
+
         public DashboardView()
         {
             InitializeComponent();
+            DataContext = this; // Necesario para que funcione el FormatoMoneda en el XAML
         }
 
-        // Evento que se ejecuta automáticamente cuando se abre la pantalla
         private async void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             await CargarDatosAsync();
         }
 
-        // Evento del botón "Actualizar Datos"
         private async void BtnActualizar_Click(object sender, RoutedEventArgs e)
         {
             await CargarDatosAsync();
         }
 
-        // Método principal para consultar SQL y llenar los TextBlocks
         private async Task CargarDatosAsync()
         {
-            // Deshabilitar botón temporalmente para que no den muchos clics seguidos
             BtnActualizar.IsEnabled = false;
 
             try
             {
                 using var context = new SistemaGimDbContext();
-
-                // 1. Definir los rangos de tiempo
                 DateTime hoy = DateTime.Now.Date;
-
-                int diff = (7 + (hoy.DayOfWeek - DayOfWeek.Monday)) % 7;
-                DateTime inicioSemana = hoy.AddDays(-1 * diff).Date;
-
                 DateTime inicioMes = new DateTime(hoy.Year, hoy.Month, 1);
+                DateTime hace7Dias = hoy.AddDays(-6); // Hoy + 6 días atrás = 7 días
 
-                // 2. Cálculos de Asistencias (Visitas)
+                // 1. CARGAR TARJETAS (KPIs)
                 int visitasHoy = await context.Asistencias.CountAsync(a => a.FechaHora >= hoy);
-                int visitasSemana = await context.Asistencias.CountAsync(a => a.FechaHora >= inicioSemana);
                 int visitasMes = await context.Asistencias.CountAsync(a => a.FechaHora >= inicioMes);
 
-                // 3. Cálculos de Ingresos (Pagos)
-                decimal pagosHoy = await context.Pagos
-                    .Where(p => p.FechaTransaccion >= hoy)
-                    .SumAsync(p => (decimal?)p.Monto) ?? 0m;
+                decimal pagosHoy = await context.Pagos.Where(p => p.FechaTransaccion >= hoy).SumAsync(p => (decimal?)p.Monto) ?? 0m;
+                decimal pagosMes = await context.Pagos.Where(p => p.FechaTransaccion >= inicioMes).SumAsync(p => (decimal?)p.Monto) ?? 0m;
 
-                decimal pagosSemana = await context.Pagos
-                    .Where(p => p.FechaTransaccion >= inicioSemana)
-                    .SumAsync(p => (decimal?)p.Monto) ?? 0m;
-
-                decimal pagosMes = await context.Pagos
-                    .Where(p => p.FechaTransaccion >= inicioMes)
-                    .SumAsync(p => (decimal?)p.Monto) ?? 0m;
-
-                decimal pagosTotales = await context.Pagos
-                    .SumAsync(p => (decimal?)p.Monto) ?? 0m;
-
-                // 4. Asignar resultados a la UI (formateando como texto)
                 TxtVisitasHoy.Text = visitasHoy.ToString();
-                TxtVisitasSemana.Text = visitasSemana.ToString();
                 TxtVisitasMes.Text = visitasMes.ToString();
-
                 TxtPagosHoy.Text = $"C$ {pagosHoy:N2}";
-                TxtPagosSemana.Text = $"C$ {pagosSemana:N2}";
                 TxtPagosMes.Text = $"C$ {pagosMes:N2}";
-                TxtPagosTotales.Text = $"C$ {pagosTotales:N2}";
+
+                // 2. CARGAR GRÁFICO DE BARRAS (Últimos 7 días)
+                // Obtenemos los pagos de los últimos 7 días y los agrupamos por fecha
+                var pagos7Dias = await context.Pagos
+                    .Where(p => p.FechaTransaccion >= hace7Dias)
+                    .GroupBy(p => p.FechaTransaccion.Date)
+                    .Select(g => new { Fecha = g.Key, Total = g.Sum(p => p.Monto) })
+                    .ToListAsync();
+
+                // Construir los ejes y las barras
+                var valoresBarras = new ChartValues<decimal>();
+                var etiquetasFechas = new List<string>();
+
+                for (int i = 0; i <= 6; i++)
+                {
+                    DateTime fechaActual = hace7Dias.AddDays(i);
+                    etiquetasFechas.Add(fechaActual.ToString("dd/MMM"));
+
+                    var pagoDelDia = pagos7Dias.FirstOrDefault(p => p.Fecha == fechaActual);
+                    valoresBarras.Add(pagoDelDia != null ? pagoDelDia.Total : 0m);
+                }
+
+                GraficoBarras.Series = new SeriesCollection
+                {
+                    new ColumnSeries
+                    {
+                        Title = "Ingresos",
+                        Values = valoresBarras,
+                        Fill = (System.Windows.Media.Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#4CAF50")
+                    }
+                };
+                EjeFechas.Labels = etiquetasFechas;
+
+                // 3. CARGAR GRÁFICO DE PASTEL (Ingresos del Mes por Concepto)
+                var ingresosPorConcepto = await context.Pagos
+                    .Where(p => p.FechaTransaccion >= inicioMes)
+                    .GroupBy(p => p.Concepto)
+                    .Select(g => new { Concepto = g.Key, Total = g.Sum(x => x.Monto) })
+                    .ToListAsync();
+
+                var seriesPastel = new SeriesCollection();
+                foreach (var item in ingresosPorConcepto)
+                {
+                    seriesPastel.Add(new PieSeries
+                    {
+                        Title = item.Concepto,
+                        Values = new ChartValues<decimal> { item.Total },
+                        DataLabels = true,
+                        LabelPoint = chartPoint => $"{chartPoint.Y:N0} C$ ({chartPoint.Participation:P0})" // Muestra el monto y el %
+                    });
+                }
+
+                GraficoPastel.Series = seriesPastel;
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al cargar la base de datos:\n{ex.Message}",
-                                "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error al cargar el dashboard:\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             finally
             {
-                // Volver a habilitar el botón
                 BtnActualizar.IsEnabled = true;
             }
         }
