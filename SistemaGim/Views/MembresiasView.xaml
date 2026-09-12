@@ -1,0 +1,133 @@
+﻿<UserControl x:Class="SistemaGim.Views.MembresiasView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             Background="Transparent"
+             FontFamily="{DynamicResource MaterialDesignDefaultFont}"
+             Loaded="UserControl_Loaded">
+
+    <Grid Margin="20">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="380"/>
+            <!-- Panel de Venta -->
+            <ColumnDefinition Width="*"/>
+            <!-- Panel de Acceso y Status -->
+        </Grid.ColumnDefinitions>
+
+        <!-- PANEL IZQUIERDO: VENTA O RENOVACIÓN -->
+        <materialDesign:Card Grid.Column="0" Margin="0 0 20 0" UniformCornerRadius="8" materialDesign:ElevationAssist.Elevation="Dp2" Background="White">
+            <StackPanel Margin="20">
+                <StackPanel Orientation="Horizontal" Margin="0 0 0 20">
+                    <materialDesign:PackIcon Kind="CardAccountDetailsStar" Width="28" Height="28" Foreground="#673AB7" VerticalAlignment="Center"/>
+                    <TextBlock Text="Asignar Membresía" FontSize="20" FontWeight="Bold" Margin="10 0 0 0" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <ComboBox x:Name="CmbClientePago" 
+                          materialDesign:HintAssist.Hint="Seleccione el Cliente *" 
+                          IsEditable="True" DisplayMemberPath="NombreCompleto" SelectedValuePath="ClienteId"
+                          Style="{StaticResource MaterialDesignFloatingHintComboBox}" FontSize="15" Margin="0 10"/>
+
+                <ComboBox x:Name="CmbPlan" 
+                          materialDesign:HintAssist.Hint="Plan de Membresía *" 
+                          DisplayMemberPath="Concepto" SelectedValuePath="ConfigId"
+                          SelectionChanged="CmbPlan_SelectionChanged"
+                          Style="{StaticResource MaterialDesignFloatingHintComboBox}" FontSize="15" Margin="0 10"/>
+
+                <Grid Margin="0 20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox x:Name="TxtFechaInicio" Grid.Column="0" materialDesign:HintAssist.Hint="Inicia" IsReadOnly="True" Foreground="Gray" Style="{StaticResource MaterialDesignFloatingHintTextBox}" FontSize="14"/>
+                    <TextBox x:Name="TxtFechaFin" Grid.Column="2" materialDesign:HintAssist.Hint="Vence" IsReadOnly="True" Foreground="#E91E63" FontWeight="Bold" Style="{StaticResource MaterialDesignFloatingHintTextBox}" FontSize="14"/>
+                </Grid>
+
+                <TextBox x:Name="TxtTotalPagar" materialDesign:HintAssist.Hint="Total a Cobrar (C$)" IsReadOnly="True" Foreground="#4CAF50" FontWeight="Bold" FontSize="24" HorizontalContentAlignment="Center" Margin="0 10 0 30"/>
+
+                <Button x:Name="BtnCobrarMembresia" Click="BtnCobrarMembresia_Click" Background="#4CAF50" BorderBrush="#4CAF50" Foreground="White" Height="45">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="CashRegister" Width="20" Height="20" VerticalAlignment="Center"/>
+                        <TextBlock Text="REGISTRAR PAGO" Margin="10 0 0 0" VerticalAlignment="Center" FontWeight="Bold"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </materialDesign:Card>
+
+        <!-- PANEL DERECHO: CONTROL DE ACCESO -->
+        <materialDesign:Card Grid.Column="1" UniformCornerRadius="8" materialDesign:ElevationAssist.Elevation="Dp2" Background="White">
+            <Grid Margin="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0 0 0 20">
+                    <materialDesign:PackIcon Kind="AccountCheck" Width="28" Height="28" Foreground="#2196F3" VerticalAlignment="Center"/>
+                    <TextBlock Text="Control de Acceso y Visitas" FontSize="20" FontWeight="Bold" Margin="10 0 0 0" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <!-- Buscador de acceso -->
+                <Grid Grid.Row="1" Margin="0 0 0 20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <ComboBox x:Name="CmbClienteAcceso" Grid.Column="0"
+                              materialDesign:HintAssist.Hint="Buscar cliente en puerta..." 
+                              IsEditable="True" DisplayMemberPath="NombreCompleto" SelectedValuePath="ClienteId"
+                              SelectionChanged="CmbClienteAcceso_SelectionChanged"
+                              Style="{StaticResource MaterialDesignFloatingHintComboBox}" FontSize="18" Height="50" Margin="0 0 20 0"/>
+
+                    <Button x:Name="BtnRegistrarEntrada" Grid.Column="1" Click="BtnRegistrarEntrada_Click" Background="#2196F3" BorderBrush="#2196F3" Height="50" Padding="20 0" IsEnabled="False">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Login" Width="24" Height="24" VerticalAlignment="Center"/>
+                            <TextBlock Text="MARCAR ENTRADA" Margin="10 0 0 0" VerticalAlignment="Center" FontWeight="Bold"/>
+                        </StackPanel>
+                    </Button>
+                </Grid>
+
+                <!-- Status de Membresía e Historial -->
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="250"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Tarjeta de Estado Visual -->
+                    <materialDesign:Card Grid.Column="0" x:Name="CardStatus" Background="#F5F6FA" UniformCornerRadius="8" Padding="15" Margin="0 0 15 0" VerticalAlignment="Top">
+                        <StackPanel>
+                            <TextBlock Text="Estado Actual" Foreground="Gray" FontSize="14" HorizontalAlignment="Center"/>
+                            <materialDesign:PackIcon x:Name="IconStatus" Kind="ShieldCheck" Width="60" Height="60" Foreground="Gray" HorizontalAlignment="Center" Margin="0 10"/>
+                            <TextBlock x:Name="TxtStatusMembresia" Text="Seleccione cliente" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center"/>
+
+                            <Separator Margin="0 15"/>
+
+                            <TextBlock Text="Días Restantes:" Foreground="Gray" HorizontalAlignment="Center"/>
+                            <TextBlock x:Name="TxtDiasRestantes" Text="-" FontSize="36" FontWeight="Bold" HorizontalAlignment="Center"/>
+                            <TextBlock x:Name="TxtVencimientoInfo" Text="-" FontSize="12" Foreground="Gray" HorizontalAlignment="Center" Margin="0 5 0 0"/>
+                        </StackPanel>
+                    </materialDesign:Card>
+
+                    <!-- Tabla de Visitas del Cliente -->
+                    <DataGrid x:Name="DgHistorialVisitas" Grid.Column="1" AutoGenerateColumns="False" IsReadOnly="True" 
+                              Background="White" HeadersVisibility="Column" GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#E0E0E0" BorderThickness="0" RowHeight="40">
+                        <DataGrid.Resources>
+                            <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
+                                <Setter Property="FontWeight" Value="Bold"/>
+                            </Style>
+                        </DataGrid.Resources>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Fecha de Visita" Binding="{Binding FechaHora, StringFormat='dd MMM yyyy'}" Width="*"/>
+                            <DataGridTextColumn Header="Hora de Entrada" Binding="{Binding FechaHora, StringFormat='hh:mm tt'}" Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+
+            </Grid>
+        </materialDesign:Card>
+    </Grid>
+</UserControl>
