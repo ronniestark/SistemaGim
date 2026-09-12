@@ -54,7 +54,7 @@
                             </Button>
 
                             <!-- Botón Visitas Diarias -->
-                            <Button Style="{StaticResource MaterialDesignFlatButton}" Foreground="#FFFFFF" HorizontalAlignment="Stretch" Height="50" HorizontalContentAlignment="Left" Margin="0 0 0 5">
+                            <Button Click="BtnVisitas_Click" Style="{StaticResource MaterialDesignFlatButton}" Foreground="#FFFFFF" HorizontalAlignment="Stretch" Height="50" HorizontalContentAlignment="Left" Margin="0 0 0 5">
                                 <StackPanel Orientation="Horizontal">
                                     <materialDesign:PackIcon Kind="AccountClock" Width="22" Height="22" VerticalAlignment="Center" Margin="10 0 0 0"/>
                                     <TextBlock Text="Visitas Diarias" Margin="20 0 0 0" VerticalAlignment="Center" FontSize="15"/>
@@ -86,9 +86,9 @@
                             </Button>
 
                             <!-- Botón Configuración -->
-                            <Button Style="{StaticResource MaterialDesignFlatButton}" Foreground="#FFFFFF" HorizontalAlignment="Stretch" Height="50" HorizontalContentAlignment="Left" Margin="0 0 0 5">
+                            <Button Click="BtnConfiguracion_Click" Style="{StaticResource MaterialDesignFlatButton}" Foreground="#FFFFFF" HorizontalAlignment="Stretch" Height="50" HorizontalContentAlignment="Left" Margin="0 0 0 5">
                                 <StackPanel Orientation="Horizontal">
-                                    <materialDesign:PackIcon Kind="Cog" Width="22" Height="22" VerticalAlignment="Center" Margin="10 0 0 0"/>
+                                    <materialDesign:PackIcon Kind="Settings" Width="22" Height="22" VerticalAlignment="Center" Margin="10 0 0 0"/>
                                     <TextBlock Text="Configuración" Margin="20 0 0 0" VerticalAlignment="Center" FontSize="15"/>
                                 </StackPanel>
                             </Button>

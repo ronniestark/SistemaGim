@@ -25,5 +25,17 @@ namespace SistemaGim
             MainContent.Content = new ClientesView();
             MenuLateral.IsLeftDrawerOpen = false; // Oculta el menú automáticamente al hacer clic
         }
+
+        private void BtnVisitas_Click(object sender, RoutedEventArgs e)
+        {
+            MainContent.Content = new VisitasView();
+            MenuLateral.IsLeftDrawerOpen = false; // Oculta el menú automáticamente al hacer clic
+        }
+
+        private void BtnConfiguracion_Click(object sender, RoutedEventArgs e)
+        {
+            MainContent.Content = new ConfiguracionView();
+            MenuLateral.IsLeftDrawerOpen = false; // Oculta el menú automáticamente al hacer clic
+        }
     }
 }
