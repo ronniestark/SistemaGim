@@ -19,5 +19,11 @@ namespace SistemaGim
             // Cuando hagan clic, inyectamos la vista del Dashboard en el contenedor principal
             MainContent.Content = new DashboardView();
         }
+
+        private void BtnClientes_Click(object sender, RoutedEventArgs e)
+        {
+            MainContent.Content = new ClientesView();
+            MenuLateral.IsLeftDrawerOpen = false; // Oculta el menú automáticamente al hacer clic
+        }
     }
 }
