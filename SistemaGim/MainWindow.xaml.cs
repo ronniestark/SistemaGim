@@ -49,5 +49,11 @@ namespace SistemaGim
             MainContent.Content = new SistemaGim.Views.InventarioView();
             MenuLateral.IsLeftDrawerOpen = false;
         }
+
+        private void BtnReportes_Click(object sender, RoutedEventArgs e)
+        {
+            MainContent.Content = new ReportesView();
+            MenuLateral.IsLeftDrawerOpen = false; // Oculta el menú automáticamente al hacer clic
+        }
     }
 }
